@@ -1,4 +1,4 @@
-# Tetris – Python in the Browser (PyScript)
+# Tetris Game – Python in the Browser (PyScript)
 ▶️ [Play Here](https://arassp.github.io/Tetris/) 
 
 An old project for a classic Tetris game written in Python that runs in the browser using PyScript and now hosted with GitHub Pages.  
