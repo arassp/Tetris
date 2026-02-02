@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>PyScript Tetris</title>
+    <title>PyScript Tetris Project</title>
 
     <link rel="stylesheet" href="https://pyscript.net/releases/2026.1.1/core.css" />
-    
+
+    <!-- Adding polyfill for older browsers -->
     <script>
       if (!Promise.withResolvers) {
         Promise.withResolvers = function () {
@@ -23,36 +24,51 @@
     <script type="module" src="https://pyscript.net/releases/2026.1.1/core.js"></script>
   </head>
 
-  <body style="font-family: system-ui, sans-serif; background:#111; color:#eee; margin:20px;">
-    <h2 style="margin:0 0 10px 0;">Tetris</h2>
+  <body
+    style="
+      font-family: system-ui, sans-serif;
+      background:#111;
+      color:#eee;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    "
+  >
+    <div style="display:flex; flex-direction:column; align-items:center; padding:20px;">
 
-    <div style="display:flex; gap:20px; align-items:flex-start;">
-      <canvas id="game" style="border:1px solid #333; background:#0b0b0b;"></canvas>
+      <h2 style="margin:0 0 12px 0;">Tetris</h2>
 
-      <div>
-        <div style="margin-bottom:10px;">
-          <div>Score: <span id="score">0</span></div>
-          <div>Lines: <span id="lines">0</span></div>
-          <div>Level: <span id="level">1</span></div>
-        </div>
+      <div style="display:flex; gap:20px; align-items:flex-start;">
+        <canvas id="game" style="border:1px solid #333; background:#0b0b0b;"></canvas>
 
-        <div style="display:flex; gap:10px; margin-bottom:10px;">
-          <button id="btn-start">Start</button>
-          <button id="btn-pause">Pause</button>
-          <button id="btn-restart">Restart</button>
-        </div>
+        <div>
+          <div style="margin-bottom:10px;">
+            <div>Score: <span id="score">0</span></div>
+            <div>Lines: <span id="lines">0</span></div>
+            <div>Level: <span id="level">1</span></div>
+          </div>
 
-        <div style="font-size:14px; line-height:1.5; color:#bbb;">
-          Controls<br />
-          Left and Right arrows move<br />
-          Down arrow drops faster<br />
-          Up arrow rotates<br />
-          Space hard drop<br />
-          P pause
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <button id="btn-start">Start</button>
+            <button id="btn-pause">Pause</button>
+            <button id="btn-restart">Restart</button>
+          </div>
+
+          <div style="font-size:14px; line-height:1.5; color:#bbb;">
+            Game Controls<br />
+            Left and Right arrows move<br />
+            Down arrow drops faster<br />
+            Up arrow rotates<br />
+            Space hard drop<br />
+            P pause
+          </div>
         </div>
       </div>
+
     </div>
 
-    <script type="py" src="tetris.py"></script>
+    <script type="py" src="./tetris.py"></script>
   </body>
 </html>
