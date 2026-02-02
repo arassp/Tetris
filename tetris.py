@@ -5,8 +5,17 @@
 # ========================================================================
 
 from js import document, window
+from pyodide.ffi import create_proxy
 import random
 import time
+
+# Proxy globals so Python doesn't throw them away lol 
+start_proxy = None
+pause_proxy = None
+restart_proxy = None
+keydown_proxy = None
+canvas_click_proxy = None
+tick_proxy = None
 
 # Board size 
 COLS = 10
@@ -483,10 +492,10 @@ def tick():
     draw_everything()
     update_hud()
 
-
 # BOOT
 def boot():
     global board
+    global start_proxy, pause_proxy, restart_proxy, keydown_proxy, canvas_click_proxy, tick_proxy
 
     board = make_empty_board()
     update_speed()
@@ -494,19 +503,27 @@ def boot():
     draw_everything()
     update_hud()
 
+    # Wrap Python functions so JavaScript can safely call them later
+    start_proxy = create_proxy(start_game)
+    pause_proxy = create_proxy(pause_game)
+    restart_proxy = create_proxy(restart_game)
+    keydown_proxy = create_proxy(on_keydown)
+    canvas_click_proxy = create_proxy(lambda e: canvas.focus())
+    tick_proxy = create_proxy(tick)
+
     # Connect buttons
-    start_btn.addEventListener("click", start_game)
-    pause_btn.addEventListener("click", pause_game)
-    restart_btn.addEventListener("click", restart_game)
+    start_btn.addEventListener("click", start_proxy)
+    pause_btn.addEventListener("click", pause_proxy)
+    restart_btn.addEventListener("click", restart_proxy)
 
     # Connect keyboard
-    document.addEventListener("keydown", on_keydown)
+    document.addEventListener("keydown", keydown_proxy)
 
     # Click canvas to focus it
-    canvas.addEventListener("click", lambda e: canvas.focus())
+    canvas.addEventListener("click", canvas_click_proxy)
 
-    # Run the game loop about 60 times per second
-    window.setInterval(tick, 16)
+    # Run the game loop
+    window.setInterval(tick_proxy, 16)
 
-
+    
 boot()
