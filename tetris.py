@@ -9,14 +9,6 @@ from pyodide.ffi import create_proxy
 import random
 import time
 
-# Proxy globals so Python doesn't throw them away lol 
-start_proxy = None
-pause_proxy = None
-restart_proxy = None
-keydown_proxy = None
-canvas_click_proxy = None
-tick_proxy = None
-
 # Board size 
 COLS = 10
 ROWS = 20
@@ -465,8 +457,9 @@ def reset_game():
     spawn_piece()
 
     last_time = time.time()
-
-
+    
+    draw_everything()
+    update_hud()
 
 # MAIN LOOP
 def tick():
@@ -493,23 +486,28 @@ def tick():
     update_hud()
 
 # BOOT
+# Keep the interval id too
+interval_id = None
+
+def canvas_focus(evt=None):
+    canvas.focus()
+
+# Create proxies one time and keep them forever
+start_proxy = create_proxy(start_game)
+pause_proxy = create_proxy(pause_game)
+restart_proxy = create_proxy(restart_game)
+keydown_proxy = create_proxy(on_keydown)
+canvas_click_proxy = create_proxy(canvas_focus)
+tick_proxy = create_proxy(tick)
+
 def boot():
-    global board
-    global start_proxy, pause_proxy, restart_proxy, keydown_proxy, canvas_click_proxy, tick_proxy
+    global board, interval_id
 
     board = make_empty_board()
     update_speed()
 
     draw_everything()
     update_hud()
-
-    # Wrap Python functions so JavaScript can safely call them later
-    start_proxy = create_proxy(start_game)
-    pause_proxy = create_proxy(pause_game)
-    restart_proxy = create_proxy(restart_game)
-    keydown_proxy = create_proxy(on_keydown)
-    canvas_click_proxy = create_proxy(lambda e: canvas.focus())
-    tick_proxy = create_proxy(tick)
 
     # Connect buttons
     start_btn.addEventListener("click", start_proxy)
@@ -523,7 +521,6 @@ def boot():
     canvas.addEventListener("click", canvas_click_proxy)
 
     # Run the game loop
-    window.setInterval(tick_proxy, 16)
+    interval_id = window.setInterval(tick_proxy, 16)
 
-    
 boot()
