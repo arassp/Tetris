@@ -6,6 +6,20 @@
     <title>PyScript Tetris</title>
 
     <link rel="stylesheet" href="https://pyscript.net/releases/2026.1.1/core.css" />
+    
+    <script>
+      if (!Promise.withResolvers) {
+        Promise.withResolvers = function () {
+          var resolve, reject;
+          var promise = new Promise(function (res, rej) {
+            resolve = res;
+            reject = rej;
+          });
+          return { promise: promise, resolve: resolve, reject: reject };
+        };
+      }
+    </script>
+
     <script type="module" src="https://pyscript.net/releases/2026.1.1/core.js"></script>
   </head>
 
